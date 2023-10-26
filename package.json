@@ -23,5 +23,17 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ]
+  ],
+  "description": "```\r npm install\r ```",
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ua4wne/vue3_course.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ua4wne/vue3_course/issues"
+  },
+  "homepage": "https://github.com/ua4wne/vue3_course#readme"
 }
