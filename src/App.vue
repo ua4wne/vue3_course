@@ -28,6 +28,19 @@
         v-if="!isPostLoading"     
     />
     <div v-else>Идет загрузка ...</div>
+    <div class="page__wrapper">
+        <div
+            v-for="pageNumber in totalPages"
+            :key="pageNumber"
+            class="page"
+            :class="{
+                'current_page': page === pageNumber
+            }"
+            @click="changePage(pageNumber)"
+        >
+        {{ pageNumber }}
+    </div>
+    </div>
 </div>    
 </template>
 
@@ -47,6 +60,9 @@
                 isPostLoading: false,
                 selectedSort: '',
                 searchQuery: '',
+                page: 1,
+                limit: 10,
+                totalPages: 0,
                 sortOptions: [
                     {value: 'title', name: 'По названию'},
                     {value: 'body', name: 'По содержимому'}
@@ -64,10 +80,20 @@
             showDialog(){
                 this.dialogVisible = true
             },
+            changePage(pageNumber) {
+                this.page = pageNumber
+                //this.fetchPosts()
+            },
             async fetchPosts(){
                 try {
                     this.isPostLoading = true
-                    const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+                    const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+                        params: {
+                            _page: this.page,
+                            _limit: this.limit
+                        }
+                    })
+                    this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
                     this.posts = response.data
                     
                     
@@ -90,11 +116,9 @@
             }
         },
         watch:{
-            // selectedSort(newValue){
-            //     this.posts.sort((post1,post2) => {
-            //         return post1[newValue]?.localeCompare(post2[newValue])
-            //     })
-            // }
+            page() {
+                this.fetchPosts()
+            }
         }
     }
 </script>
@@ -112,6 +136,18 @@
         margin: 15px 0;
         display: flex;
         justify-content: space-between;
+    }
+    .page__wrapper {
+        display: flex;
+        margin-top: 15px;
+    }
+    .page {
+        border: 1px solid black;
+        padding: 10px;
+        margin-left: 5px;
+    }
+    .current_page {
+        border: 3px solid teal;
     }
     
 </style>
